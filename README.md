@@ -10,6 +10,9 @@
 - **GitHub Repository:** [https://github.com/jeffrey-graham/paypal-agentic-commerce-copilot](https://github.com/jeffrey-graham/paypal-agentic-commerce-copilot)
 - **Demo Video (`<3 min` 1080p MP4):** [`demo.mp4`](demo.mp4)
 
+> [!NOTE]
+> **Implementation & Simulation Status:** `src/paypal_client.py` and `src/mcp_paypal_agent.py` support PayPal Sandbox REST endpoints when `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` are supplied and default to deterministic offline mock execution; the GitHub Pages workbench runs a standalone client-side simulation without live Sandbox API keys in the browser.
+
 ---
 
 ## Multi-Track Prize Qualification Matrix
