@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PayFlow-AI — Autonomous Agentic Commerce & Multi-Rail Treasury Copilot | PayPal AI Hackathon</title>
+  <!-- AG Grid Community Official Bundle + Dark Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.2/styles/ag-grid.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.2/styles/ag-theme-quartz.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.2/dist/ag-grid-community.min.js" defer></script>
+  <style>
+    :root {
+      --bg-primary: #060b16;
+      --bg-card: #0d1527;
+      --bg-elevated: #14203a;
+      --border: #1e3158;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --paypal-blue: #0070ba;
+      --paypal-cyan: #00a8ea;
+      --paypal-gold: #ffc439;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --purple: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: radial-gradient(circle at 15% 0%, #0d2149 0%, var(--bg-primary) 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    header {
+      background: rgba(13, 21, 39, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--paypal-blue), var(--paypal-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0, 168, 234, 0.35);
+    }
+    .brand-title h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-paypal { background: rgba(0, 168, 234, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+    .badge-gold { background: rgba(255, 196, 57, 0.16); color: var(--paypal-gold); border: 1px solid rgba(255, 196, 57, 0.4); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
+    .brand-subtitle {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .kpi-ribbon {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      padding: 18px 28px 8px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--paypal-blue), var(--paypal-cyan));
+    }
+    .kpi-label {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .kpi-val {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 4px 0 2px;
+      color: #fff;
+    }
+    .kpi-sub {
+      font-size: 11.5px;
+      color: #34d399;
+      font-weight: 600;
+    }
+    .nav-tabs {
+      max-width: 1480px;
+      margin: 12px auto 0;
+      padding: 0 28px;
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 12px 18px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.03); }
+    .tab-btn.active {
+      color: #38bdf8;
+      border-bottom-color: var(--paypal-cyan);
+      background: rgba(0, 168, 234, 0.08);
+    }
+    main {
+      max-width: 1480px;
+      margin: 18px auto 40px;
+      padding: 0 28px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.32);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn {
+      background: linear-gradient(135deg, var(--paypal-blue), var(--paypal-cyan));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+    .btn:hover { opacity: 0.94; transform: translateY(-1px); }
+    .btn-gold {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      color: #0f172a;
+    }
+    .btn-outline {
+      background: rgba(20, 32, 58, 0.8);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+    }
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .input-box, select {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    /* AG Grid Interactive Table Styling */
+    .ag-grid-wrapper {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #091120;
+    }
+    table.ag-native-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    table.ag-native-table th {
+      background: #111d35;
+      color: #93c5fd;
+      text-align: left;
+      padding: 11px 12px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    table.ag-native-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(30, 49, 88, 0.65);
+      color: #e2e8f0;
+    }
+    table.ag-native-table tr:hover td {
+      background: rgba(0, 168, 234, 0.08);
+    }
+    .pill {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .pill-completed { background: rgba(16, 185, 129, 0.18); color: #34d399; }
+    .pill-pending { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+    .pill-dispute { background: rgba(244, 63, 94, 0.18); color: #fb7185; }
+    .risk-bar {
+      width: 100%;
+      height: 7px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .risk-fill { height: 100%; border-radius: 999px; }
+
+    /* Bryntum Scheduler / Gantt Timeline Styles */
+    .bryntum-scheduler {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #08101f;
+    }
+    .bryntum-header {
+      display: grid;
+      grid-template-columns: 240px repeat(6, 1fr);
+      background: #111d35;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+    .bryntum-header div {
+      padding: 10px 12px;
+      border-right: 1px solid rgba(30, 49, 88, 0.6);
+    }
+    .bryntum-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      border-bottom: 1px solid rgba(30, 49, 88, 0.55);
+      align-items: center;
+      min-height: 54px;
+    }
+    .bryntum-resource {
+      padding: 10px 12px;
+      border-right: 1px solid var(--border);
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+    .bryntum-resource span {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .bryntum-track {
+      position: relative;
+      height: 54px;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent calc(16.666% - 1px),
+        rgba(30, 49, 88, 0.45) calc(16.666% - 1px),
+        rgba(30, 49, 88, 0.45) 16.666%
+      );
+    }
+    .bryntum-task {
+      position: absolute;
+      top: 10px;
+      height: 34px;
+      border-radius: 8px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .code-pane {
+      background: #050a14;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 12px;
+      color: #a5f3fc;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.55;
+      max-height: 380px;
+    }
+    .log-item {
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--paypal-cyan);
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+    }
+    .log-item strong { color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-logo">P</div>
+      <div class="brand-title">
+        <h1>
+          PayFlow-AI
+          <span class="badge badge-paypal">PayPal Orders v2 + Payouts v1</span>
+          <span class="badge badge-gold">MCP Agentic Commerce</span>
+          <span class="badge badge-emerald">AG Grid + Bryntum + APIMatic</span>
+        </h1>
+        <div class="brand-subtitle">
+          Autonomous AI Procurement Negotiator, Multi-Rail PayPal Treasury Ledger, Milestone Gantt Scheduler &amp; Dispute Auto-Defender
+        </div>
+      </div>
+    </div>
+    <div class="header-controls">
+      <button class="btn btn-gold" onclick="triggerAutonomousProcurement()">+ Run Autonomous AI Procurement</button>
+      <button class="btn btn-outline" onclick="exportAgGridCsv()">Export AG Grid CSV</button>
+    </div>
+  </header>
+
+  <section class="kpi-ribbon">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Agentic GMV (PayPal v2)</div>
+      <div class="kpi-val" id="kpi-gmv">$48,920.00</div>
+      <div class="kpi-sub">100% Idempotent OAuth2 Captures</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">AI Negotiated Vendor Savings</div>
+      <div class="kpi-val" id="kpi-savings">$6,840.50</div>
+      <div class="kpi-sub">14.2% Avg B2B Quote Reduction</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Batch Payouts (v1 Payments)</div>
+      <div class="kpi-val" id="kpi-payouts">28 Splits</div>
+      <div class="kpi-sub">Zero SLA Missed Milestones</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Disputes v1 Win Probability</div>
+      <div class="kpi-val" id="kpi-dispute-win">94.6%</div>
+      <div class="kpi-sub">SHA-256 Telemetry Auto-Submitted</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Webhook HMAC Integrity</div>
+      <div class="kpi-val" id="kpi-webhooks">100.0%</div>
+      <div class="kpi-sub">SHA256withRSA Verified Events</div>
+    </div>
+  </section>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" id="tabbtn-aggrid" onclick="switchTab('aggrid')">
+      1. AG Grid Enterprise PayPal Ledger &amp; Risk Matrix
+    </button>
+    <button class="tab-btn" id="tabbtn-agent" onclick="switchTab('agent')">
+      2. Agentic Commerce MCP Procurement &amp; Dispute Defense
+    </button>
+    <button class="tab-btn" id="tabbtn-bryntum" onclick="switchTab('bryntum')">
+      3. Bryntum Multi-Party Milestone &amp; Payout Scheduler
+    </button>
+    <button class="tab-btn" id="tabbtn-apimatic" onclick="switchTab('apimatic')">
+      4. APIMatic DX Portal &amp; Typed PayPal SDK Generator
+    </button>
+  </nav>
+
+  <main>
+    <!-- TAB 1: AG GRID LEDGER -->
+    <section class="tab-panel active" id="panel-aggrid">
+      <div class="panel-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              AG Grid Real-Time PayPal Multi-Rail Ledger (Orders v2, Payouts v1, Invoicing v2, Disputes v1)
+            </div>
+            <span class="badge badge-paypal">ag-grid-community v31.3 + Custom Risk Renderers</span>
+          </div>
+          <div class="filter-bar">
+            <input type="text" id="ag-search" class="input-box" placeholder="Quick Filter vendor, Order ID, rail, or status..." oninput="renderAgGrid()" style="flex:1;" />
+            <select id="ag-rail-filter" onchange="renderAgGrid()">
+              <option value="ALL">All PayPal Rails (Orders / Payouts / Invoices / Disputes)</option>
+              <option value="ORDERS_V2">Orders v2 (Checkout &amp; Capture)</option>
+              <option value="PAYOUTS_V1">Payouts v1 (Multi-Party Splits)</option>
+              <option value="INVOICING_V2">Invoicing v2 (B2B Net-30)</option>
+              <option value="DISPUTES_V1">Disputes v1 (Chargeback Defense)</option>
+            </select>
+            <button class="btn btn-outline" onclick="sortByRisk()">Sort by AI Risk Score</button>
+          </div>
+          <div class="ag-grid-wrapper" id="ag-grid-container"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Live PayPal Webhook &amp; Risk Telemetry Inspector</div>
+            <span class="badge badge-emerald">HMAC Verified</span>
+          </div>
+          <div id="inspector-details"></div>
+          <div style="margin-top: 14px;">
+            <div style="font-size:12px; font-weight:700; color:#93c5fd; margin-bottom:6px;">
+              Selected PayPal REST API Payload (`PayPal-Request-Id` Idempotent):
+            </div>
+            <div class="code-pane" id="payload-preview"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: AGENTIC COMMERCE & DISPUTE DEFENSE -->
+    <section class="tab-panel" id="panel-agent">
+      <div class="panel-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Autonomous MCP Procurement Negotiator &amp; PayPal Order v2 Executor</div>
+            <span class="badge badge-gold">PayPal + AI Track</span>
+          </div>
+          <div class="filter-bar">
+            <select id="vendor-select" style="flex:1;">
+              <option value="VND-AWS-GPU|1850|1600|0.996">CloudGPU Cluster Node (Quote: $1,850.00 | Budget: $1,600.00 | SLA: 99.6%)</option>
+              <option value="VND-ANTHROPIC-API|2400|2100|0.999">Enterprise LLM Token Pool (Quote: $2,400.00 | Budget: $2,100.00 | SLA: 99.9%)</option>
+              <option value="VND-SNOWFLAKE-ETL|980|950|0.985">Realtime Data Warehouse Sync (Quote: $980.00 | Budget: $950.00 | SLA: 98.5%)</option>
+            </select>
+            <button class="btn btn-gold" onclick="executeVendorNegotiation()">Negotiate &amp; Capture Order v2</button>
+          </div>
+          <div id="agent-negotiation-log"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Automated PayPal Disputes v1 Evidence Synthesizer</div>
+            <span class="badge badge-paypal">POST /v1/customer/disputes/{id}/provide-evidence</span>
+          </div>
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:12px;">
+            Automatically compiles cryptographic delivery proofs, carrier tracking, and signed API usage logs when a `CUSTOMER.DISPUTE.CREATED` webhook arrives.
+          </p>
+          <button class="btn" style="width:100%; margin-bottom:12px;" onclick="triggerDisputeDefense()">
+            Synthesize &amp; Submit Cryptographic Dispute Defense Package
+          </button>
+          <div class="code-pane" id="dispute-json-pane"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: BRYNTUM TIMELINE / GANTT SCHEDULER -->
+    <section class="tab-panel" id="panel-bryntum">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            Bryntum-Architecture Multi-Party Escrow Milestone &amp; PayPal Payouts v1 Scheduler
+          </div>
+          <div style="display:flex; gap:8px;">
+            <span class="badge badge-gold">Bryntum Calendar / Gantt Track</span>
+            <button class="btn" onclick="advanceMilestoneGantt()">Release Next Verified Milestone Payout</button>
+          </div>
+        </div>
+        <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">
+          Interactive resource timeline linking autonomous GitHub/SLA verification checkpoints directly to `/v1/payments/payouts` multi-recipient batch splits.
+        </p>
+        <div class="bryntum-scheduler" id="bryntum-board"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: APIMATIC DX PORTAL & SDK GENERATOR -->
+    <section class="tab-panel" id="panel-apimatic">
+      <div class="panel-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">APIMatic Strongly-Typed PayPal Agentic SDK Code Generator</div>
+            <span class="badge badge-emerald">APIMatic Track ($3,000)</span>
+          </div>
+          <div class="filter-bar">
+            <select id="sdk-lang" onchange="renderApimaticSdk()">
+              <option value="python">Python 3.12 Typed SDK (APIMatic Core + Retry + OAuth2)</option>
+              <option value="typescript">TypeScript 5.x Strict SDK (@apimatic/core + BigInt Decimal)</option>
+              <option value="curl">Idempotent cURL with PayPal-Request-Id &amp; Bearer Auth</option>
+            </select>
+            <select id="sdk-op" onchange="renderApimaticSdk()">
+              <option value="orders_v2">Orders v2: Create &amp; Capture Agentic Order</option>
+              <option value="payouts_v1">Payouts v1: Multi-Recipient Batch Split</option>
+              <option value="disputes_v1">Disputes v1: Submit Cryptographic Evidence</option>
+            </select>
+          </div>
+          <div class="code-pane" id="apimatic-code-box" style="max-height:420px;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">MCP Tool Schema &amp; OpenAPI 3.1 Validation Matrix</div>
+            <span class="badge badge-paypal">Zero Hallucination Guarantee</span>
+          </div>
+          <div id="apimatic-validation-summary"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
